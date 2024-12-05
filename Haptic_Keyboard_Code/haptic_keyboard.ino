@@ -105,18 +105,18 @@ void loop() {
           } else {
             int vibType = 0;
             int freq = 0;
-            unsigned long duration = 10000;
+            unsigned long duration = 100000;
             switch (place) {
               case 'D':
-                vibType = 3; // 펄스 파형
+                vibType = 3; // 펄스파
                 freq = 3;
                 break;
               case 'W':
-                vibType = 5; // 톱니 파형
+                vibType = 5; // 톱니파
                 freq = 1;
                 break;
               case 'B':
-                vibType = 2; // 사각 파형
+                vibType = 2; // 사각파
                 freq = 5;
                 break;
               default:
@@ -160,11 +160,11 @@ void loop() {
   if (currentSwitchState[1] == LOW && currentSwitchState[7] == LOW) {
     int vibType = 0;
     int freq = 0;
-    unsigned long duration = 10000;
+    unsigned long duration = 100000;
     switch (place) {
       case 'D':
         vibType = 3; // 펄스파
-        freq = 10;
+        freq = 8;
         break;
       case 'W':
         vibType = 5; // 톱니파
