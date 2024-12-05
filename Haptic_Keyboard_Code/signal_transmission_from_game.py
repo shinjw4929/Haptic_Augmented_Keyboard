@@ -77,15 +77,16 @@ with mss.mss() as sct:
             elif idx == 3:
                 # 영역 3: 평균 색상 계산, 급격한 변화 감지
                 avg_color = np.mean(frame, axis=(0, 1))
-
+                # 디버깅 : print(f"[영역 {idx}] 평균 색상 색상 감지: {avg_color}")
                 if prev_frame_region3 is not None:
                     frame_diff = cv2.absdiff(frame, prev_frame_region3)
                     diff_sum = np.sum(frame_diff)
 
                     if diff_sum > 20000:
-                        if 75 < avg_color[0] < 100 and 75 < avg_color[1] < 100 and 75 < avg_color[2] < 100:
+
+                        if (75 < avg_color[0] < 100 and 75 < avg_color[1] < 100 and 75 < avg_color[2] < 100) or(115 < avg_color[0] < 145 and 115 < avg_color[1] < 145 and 115 < avg_color[2] < 145):
                             arduino_signal = 'W'  # 설원 지역 감지
-                        elif 30 < avg_color[0] < 50 and 30 < avg_color[1] < 50 and 30 < avg_color[2] < 50:
+                        elif 30 < avg_color[0] < 45 and 30 < avg_color[1] < 45 and 30 < avg_color[2] < 45:
                             arduino_signal = 'B'  # 물가 지역 감지
                         else:
                             arduino_signal = None
