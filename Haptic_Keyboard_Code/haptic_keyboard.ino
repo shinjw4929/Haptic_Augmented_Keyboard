@@ -99,7 +99,7 @@ void loop() {
         if (i == 7) { // SWITCH_8 (구르기 감지)
           switch8PressTime = currentMillis;
         }
-        else if (i == 1) { // SWITCH_2
+        else if (i == 1 || i == 4 || i == 5 || i == 6) { // w, a, s, d
           if (currentSwitchState[7] == LOW) {
             // SWITCH_2와 SWITCH_8이 동시에 눌림 - 달리기 : 아래에서 처리
           } else {
@@ -116,7 +116,7 @@ void loop() {
                 freq = 1;
                 break;
               case 'B':
-                vibType = 2; // 사각파
+                vibType = 4; // 삼각파
                 freq = 5;
                 break;
               default:
@@ -134,7 +134,7 @@ void loop() {
           switch8ReleaseTime = currentMillis;
           unsigned long duration = switch8ReleaseTime - switch8PressTime;
           if (duration <= 500) { // 0.5초 이내에 떼짐
-            addVibrationEvent(8, 2, 50, 800); // 사각파, 50Hz, 800ms
+            addVibrationEvent(8, 2, 100, 800); // 사각파, 100Hz, 800ms
           }
         }
         if (i == 1) { // SWITCH_2 떼짐
@@ -144,7 +144,28 @@ void loop() {
             }
           }
         }
-        if (i == 1 || i == 7) { // SWITCH_2 또는 SWITCH_8 떼짐
+        if(i == 4){
+          for (int j = 0; j < MAX_VIBRATION_EVENTS; j++) {
+            if (vibrationEvents[j].active && vibrationEvents[j].vibrationKey == 2) {
+              vibrationEvents[j].active = false;
+            }
+          }
+        }
+        if(i == 5){
+          for (int j = 0; j < MAX_VIBRATION_EVENTS; j++) {
+            if (vibrationEvents[j].active && vibrationEvents[j].vibrationKey == 2) {
+              vibrationEvents[j].active = false;
+            }
+          }
+        }
+        if(i == 6){
+          for (int j = 0; j < MAX_VIBRATION_EVENTS; j++) {
+            if (vibrationEvents[j].active && vibrationEvents[j].vibrationKey == 2) {
+              vibrationEvents[j].active = false;
+            }
+          }
+        }
+        if (i == 1 || i == 4 || i == 5 || i == 6 || i == 7) { // w a s d 또는 f 떼짐
           for (int j = 0; j < MAX_VIBRATION_EVENTS; j++) {
             if (vibrationEvents[j].active && vibrationEvents[j].vibrationKey == 9) {
               vibrationEvents[j].active = false;
@@ -156,8 +177,8 @@ void loop() {
     }
   }
 
-  // SWITCH_2, SWITCH_8 동시에 눌린 경우
-  if (currentSwitchState[1] == LOW && currentSwitchState[7] == LOW) {
+  // wasd, f 동시에 눌린 경우
+  if ((currentSwitchState[1] == LOW && currentSwitchState[7] == LOW) || (currentSwitchState[4] == LOW && currentSwitchState[7] == LOW) || (currentSwitchState[5] == LOW && currentSwitchState[7] == LOW) || (currentSwitchState[6] == LOW && currentSwitchState[7] == LOW)) {
     int vibType = 0;
     int freq = 0;
     unsigned long duration = 100000;
@@ -171,8 +192,8 @@ void loop() {
         freq = 2;
         break;
       case 'B':
-        vibType = 2; // 사각파
-        freq = 15;
+        vibType = 4; // 삼각파
+        freq = 12;
         break;
       default:
         vibType = 0;
