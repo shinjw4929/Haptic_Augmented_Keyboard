@@ -44,7 +44,7 @@ with mss.mss() as sct:
             hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
             if idx == 2:
-                # 영역 2: 동일한 색상이 1.5초 이상 유지 확인
+                # 영역 2: 동일한 색상이 1.2초 이상 유지 확인
                 current_color_distribution = cv2.calcHist(
                     [hsv_frame], [0, 1, 2], None, [8, 8, 8], [0, 180, 0, 256, 0, 256]
                 ).flatten()
@@ -57,8 +57,8 @@ with mss.mss() as sct:
                     if similarity > 0.98:
                         if same_color_start_time is None:
                             same_color_start_time = time.time()
-                        elif time.time() - same_color_start_time >= 1.5:
-                            print(f"[영역 {idx}] 1.5초 동일 패턴 유지")
+                        elif time.time() - same_color_start_time >= 1.2:
+                            print(f"[영역 {idx}] 1.2초 동일 패턴 유지")
                             arduino_signal = '3'
                             if arduino:
                                 try:
@@ -77,16 +77,16 @@ with mss.mss() as sct:
             elif idx == 3:
                 # 영역 3: 평균 색상 계산, 급격한 변화 감지
                 avg_color = np.mean(frame, axis=(0, 1))
-                # 디버깅 : print(f"[영역 {idx}] 평균 색상 색상 감지: {avg_color}")
+
                 if prev_frame_region3 is not None:
                     frame_diff = cv2.absdiff(frame, prev_frame_region3)
                     diff_sum = np.sum(frame_diff)
 
                     if diff_sum > 20000:
-
-                        if (75 < avg_color[0] < 100 and 75 < avg_color[1] < 100 and 75 < avg_color[2] < 100) or(115 < avg_color[0] < 145 and 115 < avg_color[1] < 145 and 115 < avg_color[2] < 145):
+                        # 디버깅 : print(f"[영역 {idx}] 평균 색상 색상 감지: {avg_color}")
+                        if (115 < avg_color[0] < 145 and 115 < avg_color[1] < 145 and 115 < avg_color[2] < 145):
                             arduino_signal = 'W'  # 설원 지역 감지
-                        elif 30 < avg_color[0] < 45 and 30 < avg_color[1] < 45 and 30 < avg_color[2] < 45:
+                        elif 30 < avg_color[0] < 40 and 30 < avg_color[1] < 40 and 30 < avg_color[2] < 40 and not(avg_color[0] < avg_color[2]):
                             arduino_signal = 'B'  # 물가 지역 감지
                         else:
                             arduino_signal = None
